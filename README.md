@@ -33,7 +33,7 @@ The app runs on `http://localhost:8080`.
 On startup, the app will:
 
 - Create index `products` (if missing)
-- Add mappings: `name`, `category`, `price`, `inStock`
+- Add mappings: `name`, `category`, `brand`, `price`, `inStock`, `rating`
 - Seed demo documents (default: 3)
 
 ### Seeding a larger dataset (50,000 docs)
@@ -90,6 +90,8 @@ Returns basic cluster info if Elasticsearch is reachable.
 
 Example:
 
+> Note: the examples below use bash-style line continuations (`\`). On Windows CMD, use `^` instead.
+
 ```bash
 curl --location 'http://localhost:8080/api/search-products' \
 --header 'Accept: application/json' \
@@ -133,6 +135,16 @@ curl --location "http://localhost:8080/api/decompose-impact-table-aggregations" 
 --header "Accept: application/json" ^
 --header "Content-Type: application/json" ^
 --data "{\"bool\":{\"must\":[{\"match\":{\"category\":\"electronics\"}}],\"filter\":[{\"range\":{\"price\":{\"gte\":50,\"lte\":200}}},{\"term\":{\"inStock\":true}},{\"range\":{\"rating\":{\"gte\":4}}}],\"should\":[{\"term\":{\"brand\":\"Sony\"}},{\"term\":{\"brand\":\"Samsung\"}}]}}"
+```
+
+Sample response (truncated):
+
+```json
+[
+  { "component": "Base query (all documents)", "resultsAfterApplying": 50000 },
+  { "component": "category matches \"electronics\"", "resultsAfterApplying": 10086 },
+  { "component": "Final result", "resultsAfterApplying": 49 }
+]
 ```
 
 **Trade-offs (A vs B)**
@@ -181,4 +193,26 @@ Example error shape:
   - `/api/decompose-impact-table` uses repeated `_count` (Option A)
   - `/api/decompose-impact-table-aggregations` uses a single `filters` aggregation (Option B)
 - **Seeded index**: `ProductIndexInitializer` creates a demo dataset automatically so the API is usable immediately.
+
+## Testing
+
+Run tests:
+
+```bash
+./mvnw test
+```
+
+Notes:
+- Impact-table controller tests mock `ElasticsearchClient` (no live ES required).
+- `ProductSearchControllerIntegrationTest` expects Elasticsearch to be running and the `products` index to exist with seeded data.
+
+## Extending supported operators
+
+Supported leaf operators are implemented as pluggable handlers under `com.example.elasticsearchdemo.queryops`.
+To add a new operator later (e.g. `exists`, `terms`), create a new `LeafQueryOperatorHandler` and Spring will register it automatically.
+
+## Limitations
+
+- This is a deliberately restricted subset of the Elasticsearch DSL (no `nested`, `function_score`, etc.).
+- `should` clauses are shown as a single grouped OR step in the impact table, with `minimum_should_match=1` applied when `should` is present.
 
