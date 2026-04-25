@@ -1,0 +1,17 @@
+package com.example.elasticsearchdemo.model;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ImpactRow {
+    private String component;
+    private Long resultsAfterApplying;
+    private String explanation;
+}
+
