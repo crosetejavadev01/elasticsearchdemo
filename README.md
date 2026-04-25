@@ -107,6 +107,10 @@ This is the “assessment table” output: **base count**, then **cumulative cou
 
 Each row is returned as JSON (`component`, `resultsAfterApplying`, `explanation`) so it can be rendered as a table in a UI (or Postman Visualizer).
 
+Example visualization (from Postman Visualizer):
+
+![Impact table example](docs/impact-table.png)
+
 #### Option A — incremental `_count` (simple, multiple round-trips)
 
 - **POST** `/api/decompose-impact-table`
