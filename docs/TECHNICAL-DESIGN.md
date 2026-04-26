@@ -45,6 +45,12 @@ Handles incoming HTTP requests.
 
 The controller does not do explicit bean validation; payload shape/operator validation occurs during parsing/building in lower layers and is surfaced as `400` via the global exception handler.
 
+**Future improvement (recommended)**
+
+- Introduce request DTOs for the public endpoints (e.g., a `DecomposeRequest` with a `Map<String, Object> query` field or a typed representation of supported DSL).
+- Add Bean Validation annotations (`@Valid`, `@NotNull`, `@NotEmpty`, custom constraints where needed) so malformed requests fail fast at the controller boundary.
+- Keep error responses consistent by mapping `MethodArgumentNotValidException` (and related validation exceptions) to `400` in `ApiExceptionHandler`, with field-level details if desired.
+
 ### 3.2 Service Layer
 
 Core business logic of the application.
