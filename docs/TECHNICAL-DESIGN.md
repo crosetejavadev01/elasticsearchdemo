@@ -148,6 +148,10 @@ Single `_search` call
 ↓  
 Extract `doc_count` per bucket
 
+**Important note (shared logic)**
+
+Option A and Option B share the same parsing/decomposition and stage-building logic (same `QueryComponentParser` output and same cumulative stage queries). The only difference is the counting strategy: repeated `_count` calls (Option A) vs one `_search` with `filters` aggregation (Option B).
+
 ## 5. Query Stage Model
 
 Each stage contains:

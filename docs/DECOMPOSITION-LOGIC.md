@@ -25,6 +25,10 @@ The system converts a query into a sequence of stages.
 
 Each stage applies one additional condition.
 
+**Note**
+
+This stage decomposition/order is shared by both Option A and Option B. The options differ only in how result counts are computed (multiple `_count` calls vs a single `_search` with aggregations).
+
 ## 4. Stage Ordering Rules
 
 Order is fixed:
