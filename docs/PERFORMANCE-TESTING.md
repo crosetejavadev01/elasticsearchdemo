@@ -38,7 +38,7 @@ The goal is to measure which approach is more efficient end-to-end (API latency 
 - **Total runner duration**: **~17.701 s**  
 - **Average response time**: **~47 ms**
 
-Screenshot: `postman-run-option-a.png`
+![Postman Runner — Option A](postman-run-option-a.png)
 
 ### Option B — Single `_search` + `filters` aggregation
 
@@ -46,7 +46,7 @@ Screenshot: `postman-run-option-a.png`
 - **Total runner duration**: **~10.438 s**  
 - **Average response time**: **~18 ms**
 
-Screenshot: `postman-run-option-b.png`
+![Postman Runner — Option B](postman-run-option-b.png)
 
 ## 5. Observations
 
@@ -68,5 +68,5 @@ Based on the Postman Runner averages captured above, **Option B is faster** in t
 
 - These timings are **end-to-end client-observed API latency**, not a pure Elasticsearch benchmark.
 - Results depend on local machine load, JVM warm-up, Elasticsearch cache state, and dataset size.
-- If you need a stricter benchmark, repeat with a warm-up run, fix the dataset size, and record percentiles (p50/p95/p99) from a dedicated load-testing tool.
+
 
