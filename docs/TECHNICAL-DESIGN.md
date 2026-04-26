@@ -9,7 +9,13 @@ The system decomposes a structured subset of Elasticsearch Query DSL into progre
 - **Option A**: Multiple `_count` requests
 - **Option B**: Single `_search` request with aggregations
 
-## 2. High-Level Architecture
+## 2. Impact Table Example
+
+The API returns a progressive “impact table” showing how result counts narrow as each stage is applied.
+
+![Impact table example](impact-table.png)
+
+## 3. High-Level Architecture
 
 Client (Swagger / Postman)  
 ↓  
@@ -23,9 +29,9 @@ Operator Registry (`queryops`)
 ↓  
 Elasticsearch Client
 
-## 3. Layer Responsibilities
+## 4. Layer Responsibilities
 
-### 3.1 Controller Layer
+### 4.1 Controller Layer
 
 Handles incoming HTTP requests.
 
@@ -51,7 +57,7 @@ The controller does not do explicit bean validation; payload shape/operator vali
 - Add Bean Validation annotations (`@Valid`, `@NotNull`, `@NotEmpty`, custom constraints where needed) so malformed requests fail fast at the controller boundary.
 - Keep error responses consistent by mapping `MethodArgumentNotValidException` (and related validation exceptions) to `400` in `ApiExceptionHandler`, with field-level details if desired.
 
-### 3.2 Service Layer
+### 4.2 Service Layer
 
 Core business logic of the application.
 
@@ -77,7 +83,7 @@ Core business logic of the application.
 - Logging
 - Error propagation to centralized handler
 
-### 3.3 QueryComponentParser
+### 4.3 QueryComponentParser
 
 Responsible for converting raw JSON DSL into structured components.
 
@@ -93,7 +99,7 @@ Responsible for converting raw JSON DSL into structured components.
 
 - `List<QueryComponent>`
 
-### 3.4 Operator Registry (`queryops`)
+### 4.4 Operator Registry (`queryops`)
 
 Implements extensible handling of leaf queries.
 
@@ -109,7 +115,7 @@ Each operator has a handler:
 - Generate an Elasticsearch query fragment
 - Provide a human-readable explanation string
 
-### 3.5 Elasticsearch Client
+### 4.5 Elasticsearch Client
 
 Handles communication with Elasticsearch.
 
@@ -118,7 +124,7 @@ Handles communication with Elasticsearch.
 - `_count` (Option A)
 - `_search` with aggregations (Option B)
 
-## 4. Data Flow
+## 5. Data Flow
 
 ### Option A
 
@@ -152,7 +158,7 @@ Extract `doc_count` per bucket
 
 Option A and Option B share the same parsing/decomposition and stage-building logic (same `QueryComponentParser` output and same cumulative stage queries). The only difference is the counting strategy: repeated `_count` calls (Option A) vs one `_search` with `filters` aggregation (Option B).
 
-## 5. Query Stage Model
+## 6. Query Stage Model
 
 Each stage contains:
 
@@ -161,7 +167,7 @@ Each stage contains:
 - explanation
 - result count
 
-## 6. Error Handling
+## 7. Error Handling
 
 | Scenario | Behavior |
 | --- | --- |
@@ -177,7 +183,7 @@ Each stage contains:
 - Elasticsearch/IO failures (`ElasticsearchException`, `IOException`) → `503`
 - Anything else → `500`
 
-## 7. Logging
+## 8. Logging
 
 Logs include:
 
@@ -185,7 +191,7 @@ Logs include:
 - execution time (per operation)
 - errors (via global exception handler)
 
-## 8. Extendability
+## 9. Extendability
 
 To add a new operator:
 
@@ -195,7 +201,7 @@ To add a new operator:
 
 **No changes required** in the parser or service layer for adding new *leaf* operators (as long as the new operator is handled by a registry-registered handler).
 
-## 9. Design Trade-Offs
+## 10. Design Trade-Offs
 
 | Area | Decision | Reason |
 | --- | --- | --- |
