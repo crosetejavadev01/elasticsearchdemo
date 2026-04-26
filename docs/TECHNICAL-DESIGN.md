@@ -11,7 +11,7 @@ The system decomposes a structured subset of Elasticsearch Query DSL into progre
 
 ## 2. Impact Table Example
 
-The API returns a progressive “impact table” showing how result counts narrow as each stage is applied.
+The API returns progressive “impact table” (in JSON format) showing how result counts narrow as each stage is applied.
 
 ![Impact table example](impact-table.png)
 
