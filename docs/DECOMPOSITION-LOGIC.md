@@ -160,9 +160,3 @@ Examples:
 | Fixed order | Predictable |
 | Restricted DSL | Avoid incorrect parsing |
 
-## 15. Rubric Alignment
-
-- **Decomposition** → stage-by-stage breakdown
-- **Logical grouping** → `should` clause handling
-- **Ordering** → deterministic and explainable
-

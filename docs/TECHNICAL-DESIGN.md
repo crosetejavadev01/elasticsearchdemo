@@ -204,10 +204,3 @@ To add a new operator:
 | Option B | Aggregations | Efficiency (single round trip); better performance at higher stage counts |
 | `should` handling | Grouped | Cleaner output: `should` is an OR-group, so it is presented as a single step |
 
-## 10. Rubric Alignment
-
-- **ES Structure** → `QueryComponentParser` + component model (`QueryComponent`)
-- **Decomposition** → stage builder logic in `QueryDecomposerService`
-- **Aggregations** → Option B (`filters` aggregation) implementation
-- **Maintainability** → layered design + registry pattern for operator handlers
-
